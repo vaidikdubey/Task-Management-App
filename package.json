@@ -1,0 +1,19 @@
+{
+  "name": "task-management-app",
+  "version": "1.0.0",
+  "description": "Simple task management application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaidikdubey/Task-Management-App.git"
+  },
+  "author": "VaidikDubey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vaidikdubey/Task-Management-App/issues"
+  },
+  "homepage": "https://github.com/vaidikdubey/Task-Management-App#readme"
+}
