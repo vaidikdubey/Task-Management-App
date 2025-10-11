@@ -22,14 +22,7 @@ const userSchema = new Schema({
         trim: true,
         index: true
     },
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true,
-    },
-    username: {
+    email: {
         type: String,
         required: true,
         unique: true,
@@ -104,7 +97,7 @@ userSchema.methods.generateTemporaryToken = function () {
 
     const tokenExpiry = Date.now() + (20 * 60 * 1000)
 
-    return { hashedToken, unHashedToken, tokenExpiry };6
+    return { hashedToken, unHashedToken, tokenExpiry };
 }
 
 export const User = mongoose.model("User", userSchema);

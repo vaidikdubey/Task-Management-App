@@ -6,7 +6,7 @@ export const validate = (req, res, next) => {
 
     //Learning steps
     console.log("Errors extracted from validationResult is: ", errors);
-    console.log(`Type of errors is ${typeof errors}`);
+    // console.log(`Type of errors is ${typeof errors}`);
     
     if (errors.isEmpty()) {
         return next()
