@@ -23,5 +23,6 @@ import taskRouter from "./routes/task.routes.js"
 
 app.use("/api/v1/healthcheck", healthCheckRouter)
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/note", noteRouter)
 
 export default app;

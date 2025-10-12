@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/async-handler.js";
 import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/api-response.js";
+import { ApiError } from "../utils/api-error.js";
 import crypto from "crypto";
 import { sendEmail, emailVerificationMailgenContent, verifiedEmailMailgenContent, resendEmailVerificationMailgenContent, forgotPasswordMailgenContent } from "../utils/mail.js"
 import jwt from "jsonwebtoken";
@@ -21,7 +22,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    return res.status(409).json(new ApiResponse(409, {message: "User already exists"}, "User already exists"))
+    throw new ApiError(409, "User already exists")
   }
 
   try {
@@ -53,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
       fullname: user.fullname
     }, "User created successfully"))
   } catch (error) {
-    res.status(500).json(new ApiResponse(500, {message: "User registration failed"}, "User registration failed"))
+    throw new ApiError(500, "User registration failed")
   }
 });
 
@@ -73,15 +74,13 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401)
-        .json(new ApiResponse(401, { message: "Unauthorized" }, "Invalid credentials"))
+      throw new ApiError(401, "Invalid credentials")
     }
 
     const isPasswordMatched = await user.isPasswordCorrect(password)
 
     if (!isPasswordMatched) {
-      return res.status(401)
-        .json(new ApiResponse(401, { message: "Unauthorized" }, "Invalid credentials"))
+      throw new ApiError(401, "Invalid credentials")
     }
 
     const newAccessToken = user.generateAccessToken()
@@ -113,8 +112,7 @@ const loginUser = asyncHandler(async (req, res) => {
         accessToken: newAccessToken
       }, "User login successful"))
   } catch (error) {
-    res.status(500)
-      .json(new ApiResponse(500, {message: "User login failed"}, "User login failed"))
+    throw new ApiError(500, "User login failed")
   }
 });
 
@@ -133,8 +131,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {message: "Tokens cleared"}, "User logout successful"))
     
   } catch (error) {
-    res.status(500)
-    .json(new ApiResponse(500, {message: "Error logging out"}, "User logout failed"))
+    throw new ApiError(500, "Error logging out")
   }
 });
 
@@ -152,8 +149,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
   const { token } = req.params;
 
   if (!token) {
-    return res.status(404)
-      .json(new ApiResponse(404, { message: "Token not found" }, "Token not found"))
+    throw new ApiError(404, "Token not found")
   }
   
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex")
@@ -167,8 +163,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
       })
     
     if (!user) {
-      return res.status(400)
-      .json(new ApiResponse(400, {message: "Invalid token"}, "Invalid token"))
+      throw new ApiError(400, "Invalid token")
     }
 
     user.isEmailVerified = true
@@ -190,11 +185,9 @@ const verifyEmail = asyncHandler(async (req, res) => {
       username: user.username,
       email: user.email
     }, "Email verified successfully"))
+
   } catch (error) {
-    res.status(500)
-      .json(new ApiResponse(500, {
-        message: "Email verification failed"
-      }, "Email verification failed"))
+    throw new ApiError(500, "Email verification failed")
   }
 });
 
@@ -210,8 +203,7 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
 
     if (!user) {
-      return res.status(404)
-        .json(new ApiResponse(404, { message: "User not found" }, "User not found"))
+      throw new ApiError(404, "User not found")
     }
 
     const temporaryTokens = user.generateTemporaryToken();
@@ -231,9 +223,9 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
 
     res.status(200)
       .json(new ApiResponse(200, { message: "Email verification mail sent successfully" }));
+    
   } catch (error) {
-    res.status(500)
-    .json(new ApiResponse(500, {message: "Resend email verification failed"}, "Resend email verification failed"))
+    throw new ApiError(500, "Resend email verification failed")
   }
 });
 
@@ -250,8 +242,7 @@ const resetForgottenPassword = asyncHandler(async (req, res) => {
   const { password } = req.body
   
   if (!token) {
-    return res.status(404)
-      .json(new ApiResponse(404, { message: "Token not found" }, "Token not found"));
+    throw new ApiError(404, "Token not found")
   }
 
   try {
@@ -263,8 +254,7 @@ const resetForgottenPassword = asyncHandler(async (req, res) => {
     })
 
     if(!user) {
-      return res.status(404)
-        .json(new ApiResponse(404, { message: "User not found" }, "User not found"));
+      throw new ApiError(404, "User not found")
     }
 
     user.password = password;
@@ -279,9 +269,9 @@ const resetForgottenPassword = asyncHandler(async (req, res) => {
         email: user.email,
         username: user.username
       }, "Password reset successful"));
+    
   } catch (error) {
-    res.status(500)
-      .json(new ApiResponse(500, { message: "Password reset failed" }, "Password reset failed")); 
+    throw new ApiError(500, "Password reset failed")
   }
 });
 
@@ -299,8 +289,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(401)
-      .json(new ApiResponse(401, { message: "Unauthorised" }, "Invalid token"));
+    throw new ApiError(401, "Invalid token")
   }
 
   try {
@@ -309,8 +298,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const user = await User.findById(decodedToken._id)
 
     if (!user) {
-      return res.status(401)
-        .json(new ApiResponse(401, { message: "Unauthorised" }, "Invalid token"));
+      throw new Error(401, "Invalid token, no user found")
     }
 
     const newAccessToken = user.generateAccessToken()
@@ -340,9 +328,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, {
         accessToken: newAccessToken
       }, "Access token refreshed successfully"));
+    
   } catch (error) {
-    res.status(500)
-    .json(new ApiResponse(500, {message: "Access token refresh failed"}, "Access token refresh failed"))
+    throw new ApiError(500, "Access token refresh failed")
   }
 });
 
@@ -360,8 +348,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
 
     if(!user) {
-      return res.status(400)
-        .json(new ApiResponse(400, { message: "Invalid email address" }, "User not found"));
+      throw new ApiError(400, "Invalid email address")
     }
 
     const tokens = user.generateTemporaryToken()
@@ -383,9 +370,9 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, {
         token: tokens.unHashedToken
       }, "Forgot password successful"))
+    
   } catch (error) {
-    res.status(500)
-      .json(new ApiResponse(500, { message: "Forgot password failed" }, "Forgot password failed"))
+    throw new ApiError(500, "Forgot password failed")
   }
 });
 
@@ -402,8 +389,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
 
     if (!user) {
-      return res.status(404)
-        .json(new ApiResponse(404, { message: "User not found" }, "User not found"));
+      throw new ApiError(404, "User not found")
     }
 
     const { oldPassword, password } = req.body;
@@ -411,8 +397,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     const isPasswordMatched = await user.isPasswordCorrect(oldPassword)
 
     if (!isPasswordMatched) {
-      return res.status(400)
-        .json(new ApiResponse(400, { message: "Old password is incorrect" }, "Old password is incorrect"));
+      throw new ApiError(400, "Old password is incorrect")
     }
 
     user.password = password;
@@ -446,9 +431,9 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         email: user.email,
         accessToken: newAccessToken
       }, "Password changed successfully"));
+    
   } catch (error) {
-    res.status(500)
-      .json(new ApiResponse(500, { message: "Password change failed" }, "Password change failed"));
+    throw new ApiError(500, "Password change failed")
   }
 });
 
@@ -457,8 +442,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id).select("-password -forgotPasswordToken -forgotPasswordExpiry -refreshToken -emailVerificationToken -emailVerificationExpiry");
 
     if (!user) {
-      return res.status(404)
-        .json(new ApiResponse(404, { message: "User not found" }, "User not found"));
+      throw new ApiError(404, "User not found")
     }
 
     res.status(200)
@@ -469,9 +453,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         avatar: user.avatar,
         emailVerified: user.isEmailVerified
       }, "User profile found"));
+    
   } catch (error) {
-    res.status(500)
-    .json(new ApiResponse(500, {message: "User profile not found"}, "Error finding user profile"))
+    throw new ApiError(500, "User profile not found")
   }
 });
 
