@@ -54,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
       fullname: user.fullname
     }, "User created successfully"))
   } catch (error) {
-    throw new ApiError(500, "User registration failed")
+    throw new ApiError(500, "User registration failed" ,[error], error.stack)
   }
 });
 
@@ -112,7 +112,7 @@ const loginUser = asyncHandler(async (req, res) => {
         accessToken: newAccessToken
       }, "User login successful"))
   } catch (error) {
-    throw new ApiError(500, "User login failed")
+    throw new ApiError(500, "User login failed" ,[error], error.stack)
   }
 });
 
@@ -131,7 +131,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {message: "Tokens cleared"}, "User logout successful"))
     
   } catch (error) {
-    throw new ApiError(500, "Error logging out")
+    throw new ApiError(500, "Error logging out" ,[error], error.stack)
   }
 });
 
@@ -187,7 +187,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
     }, "Email verified successfully"))
 
   } catch (error) {
-    throw new ApiError(500, "Email verification failed")
+    throw new ApiError(500, "Email verification failed" ,[error], error.stack)
   }
 });
 
@@ -225,7 +225,7 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, { message: "Email verification mail sent successfully" }));
     
   } catch (error) {
-    throw new ApiError(500, "Resend email verification failed")
+    throw new ApiError(500, "Resend email verification failed" ,[error], error.stack)
   }
 });
 
@@ -271,7 +271,7 @@ const resetForgottenPassword = asyncHandler(async (req, res) => {
       }, "Password reset successful"));
     
   } catch (error) {
-    throw new ApiError(500, "Password reset failed")
+    throw new ApiError(500, "Password reset failed" ,[error], error.stack)
   }
 });
 
@@ -330,7 +330,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       }, "Access token refreshed successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Access token refresh failed")
+    throw new ApiError(500, "Access token refresh failed" ,[error], error.stack)
   }
 });
 
@@ -372,7 +372,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
       }, "Forgot password successful"))
     
   } catch (error) {
-    throw new ApiError(500, "Forgot password failed")
+    throw new ApiError(500, "Forgot password failed" ,[error], error.stack)
   }
 });
 
@@ -433,7 +433,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
       }, "Password changed successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Password change failed")
+    throw new ApiError(500, "Password change failed" ,[error], error.stack)
   }
 });
 
@@ -455,7 +455,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
       }, "User profile found"));
     
   } catch (error) {
-    throw new ApiError(500, "User profile not found")
+    throw new ApiError(500, "User profile not found" ,[error], error.stack)
   }
 });
 

@@ -25,7 +25,7 @@ const getProjects = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, projects, "Projects found successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error finding projects", error)
+    throw new ApiError(500, "Error finding projects", error, error.stack)
   }
 });
 
@@ -51,7 +51,7 @@ const getProjectById = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, project, "Project found successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error finding project", error);
+    throw new ApiError(500, "Error finding project", error, error.stack);
   }
 });
 
@@ -91,7 +91,7 @@ const createProject = asyncHandler(async (req, res) => {
         projectMember: newProjectMember
       }, "Project created successfully"));
   } catch (error) {
-    throw new ApiError(500, "Error creating project", error);
+    throw new ApiError(500, "Error creating project", error, error.stack);
   }
 });
 
@@ -119,7 +119,7 @@ const updateProject = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, project, "Project updated successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error updating project", error);
+    throw new ApiError(500, "Error updating project", error, error.stack);
   }
 });
 
@@ -142,7 +142,7 @@ const deleteProject = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, delProject, "Project deleted successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error deleting project", error);
+    throw new ApiError(500, "Error deleting project", error, error.stack);
   }
 });
 
@@ -172,7 +172,7 @@ const getProjectMembers = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, projectMembers, "Project members found successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error finding project memebers", error)
+    throw new ApiError(500, "Error finding project memebers", error, error.stack)
   }
 });
 
@@ -212,7 +212,7 @@ const addMemberToProject = asyncHandler(async (req, res) => {
       .json(new ApiResponse(201, projectMember, "Project member added successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error adding project member", error);
+    throw new ApiError(500, "Error adding project member", error, error.stack);
   }
 });
 
@@ -238,7 +238,7 @@ const deleteMember = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, delMember, "Project member deleted successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error deleting project member", error);
+    throw new ApiError(500, "Error deleting project member", error, error.stack);
   }
 });
 
@@ -276,7 +276,7 @@ const updateMemberRole = asyncHandler(async (req, res) => {
     
   } catch (error) {
     console.error(error)
-    throw new ApiError(500, "Error updating project member role", error);
+    throw new ApiError(500, "Error updating project member role", error, error.stack);
   }
 });
 
