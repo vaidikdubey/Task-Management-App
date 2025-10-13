@@ -28,7 +28,7 @@ const getNotes = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, notes, "Notes found successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error finding notes", error, error.stack);
+    throw new ApiError(500, "Error finding notes", [error], error.stack);
   }
 });
 
@@ -54,7 +54,7 @@ const getNoteById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, note, "Note found successfully"))
 
   } catch (error) {
-    throw new ApiError(500, "Error finding note", error, error.stack)
+    throw new ApiError(500, "Error finding note", [error], error.stack)
   }
 });
 
@@ -93,7 +93,7 @@ const createNote = asyncHandler(async (req, res) => {
 
   } catch (error) {
     console.error(error)
-    throw new ApiError(500, "Error creating note", error, error.stack)
+    throw new ApiError(500, "Error creating note", [error], error.stack)
   }
 });
 
@@ -132,7 +132,7 @@ const updateNote = asyncHandler(async (req, res) => {
       }, "Note updated successfully"));
     
   } catch (error) {
-   throw new ApiError(500, "Error updating note", error, error.stack) 
+   throw new ApiError(500, "Error updating note", [error], error.stack) 
   }
 });
 
@@ -159,7 +159,7 @@ const deleteNote = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, note, "Note deleted successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error deleting note", error, error.stack)
+    throw new ApiError(500, "Error deleting note", [error], error.stack)
   }
 });
 
