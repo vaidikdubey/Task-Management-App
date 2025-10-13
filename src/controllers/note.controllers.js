@@ -18,17 +18,17 @@ const getNotes = asyncHandler(async (req, res) => {
 
     const notes = await ProjectNote.find({
       project: new mongoose.Types.ObjectId(projectId)
-    }).populate("createdBy", "username email fullname") //Fetch data from user model by using reference in createdBy field of note model
+    }).populate("createdBy", "username fullname avatar") //Fetch data from user model by using reference in createdBy field of note model
 
     if (!notes) {
       throw new ApiError(404, "No notes found")
     }
     
-    res.status(200)
+    return res.status(200)
       .json(new ApiResponse(200, notes, "Notes found successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error finding notes");
+    throw new ApiError(500, "Error finding notes", error);
   }
 });
 
@@ -54,7 +54,7 @@ const getNoteById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, note, "Note found successfully"))
 
   } catch (error) {
-    throw new ApiError(500, "Error finding note")
+    throw new ApiError(500, "Error finding note", error)
   }
 });
 
@@ -93,7 +93,7 @@ const createNote = asyncHandler(async (req, res) => {
 
   } catch (error) {
     console.error(error)
-    throw new ApiError(500, "Error creating note")
+    throw new ApiError(500, "Error creating note", error)
   }
 });
 
@@ -132,7 +132,7 @@ const updateNote = asyncHandler(async (req, res) => {
       }, "Note updated successfully"));
     
   } catch (error) {
-   throw new ApiError(500, "Error updating note") 
+   throw new ApiError(500, "Error updating note", error) 
   }
 });
 
@@ -159,7 +159,7 @@ const deleteNote = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, note, "Note deleted successfully"));
     
   } catch (error) {
-    throw new ApiError(500, "Error deleting note")
+    throw new ApiError(500, "Error deleting note", error)
   }
 });
 

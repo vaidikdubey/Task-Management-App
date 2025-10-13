@@ -5,26 +5,24 @@ import { AvailableUserRoles, UserRolesEnum } from "../utils/constants.js";
 
 const router = Router();
 
-router.use("/:projectId", isLoggedIn, validateProjectPermission(AvailableUserRoles))
-
 router
-    .route("/getall")
+    .route("/getAll/:projectId")
     .get(getNotes);
 
 router
-    .route("/getnote/:noteId")
+    .route("/:projectId/getNote/:noteId")
     .get(getNoteById);
 
 router
-    .route("/create")
+    .route("/create/:projectId")
     .post(validateProjectPermission([UserRolesEnum.ADMIN, UserRolesEnum.PROJECT_ADMIN]) ,createNote);
 
 router
-    .route("/update/:noteId")
+    .route("/:projectId/update/:noteId")
     .patch(validateProjectPermission([UserRolesEnum.ADMIN, UserRolesEnum.PROJECT_ADMIN]), updateNote);
 
 router
-    .route("/delete/:noteId")
+    .route("/:projectId/delete/:noteId")
     .delete(validateProjectPermission([UserRolesEnum.ADMIN, UserRolesEnum.PROJECT_ADMIN]), deleteNote);
 
 export default router;
