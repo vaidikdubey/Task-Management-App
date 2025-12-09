@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #e2e8f0;
+}
+
+@theme inline {
+  --shadow-input:
+    0px 2px 3px -1px rgba(0, 0, 0, 0.1),
+    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+}
