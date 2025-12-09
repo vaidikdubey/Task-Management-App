@@ -18,3 +18,5 @@ A full-stack task management application to create, manage and track tasks effic
 - Authentication: JWT, bcrypt, crypto
 - Validation: Express-validator
 - Mailing: Nodemailer, Mailgen, MailTrap
+- Frontend: React + Vite, React-Router-DOM
+- Styling: Tailwind CSS, lucid-react (icons)
