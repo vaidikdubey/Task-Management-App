@@ -8,6 +8,8 @@ export function AuthProvider({ children }) {
     const [isSigninUp, setIsSigninUp] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [isCheckingAuth, setIsCheckingAuth] = useState(false);
+    const [isSendingEmail, setIsSendingEmail] = useState(false); //Forgot password states
+    const [isResettingPassword, setIsResettingPassword] = useState(false); //Reset password states
 
     const checkAuth = async () => {
         setIsCheckingAuth(true);
@@ -111,6 +113,56 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const forgotPassword = async (email) => {
+        setIsSendingEmail(true);
+
+        try {
+            const res = await fetch("/api/v1/auth/forgot-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    credentials: "include",
+                    accept: "application/json",
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await res.json();
+
+            toast.success(data.message);
+        } catch (error) {
+            console.error("Error sending email: ", error);
+            toast.error("Error sending email");
+        } finally {
+            setIsSendingEmail(false);
+        }
+    };
+
+    const resetPassword = async (token, password) => {
+        setIsResettingPassword(true);
+
+        try {
+            const res = await fetch(`/api/v1/auth/reset-password/${token}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    credentials: "include",
+                    accept: "application/json",
+                },
+                body: JSON.stringify({ password }),
+            });
+
+            const data = res.json();
+
+            toast.success(data.message);
+        } catch (error) {
+            console.error("Error resetting password: ", error);
+            toast.error("Error resetting password");
+        } finally {
+            setIsResettingPassword(false);
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -118,10 +170,14 @@ export function AuthProvider({ children }) {
                 isSigninUp,
                 isLoggingIn,
                 isCheckingAuth,
+                isSendingEmail,
+                isResettingPassword,
                 checkAuth,
                 signup,
                 login,
                 logout,
+                forgotPassword,
+                resetPassword,
             }}
         >
             {children}

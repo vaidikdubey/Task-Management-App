@@ -8,6 +8,7 @@ import DashboardPage from "../pages/dashboard/DashboardPage.jsx";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { ForgotPasswordPage } from "../pages/auth/ForgotPasswordPage.jsx";
+import { ResetPasswordPage } from "../pages/auth/ResetPasswordPage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuth();
@@ -66,6 +67,10 @@ export default function AppRoutes() {
                     path="/forgot-password"
                     element={<ForgotPasswordPage />}
                 />
+
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+                <Route path="/verify/:token" element={<VerifyEmailPage />} />
             </Routes>
         </BrowserRouter>
     );

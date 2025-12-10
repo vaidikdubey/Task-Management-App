@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const ForgotPasswordPage = () => {
+    const { isSendingEmail, forgotPassword } = useAuth();
+
     const [email, setEmail] = useState({ email: "" });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // forgotPassword(email);
+        forgotPassword(email);
     };
 
     const handleChange = (e) => {
@@ -46,8 +49,11 @@ export const ForgotPasswordPage = () => {
                     in no time!
                 </p>
 
-                <form onSubmit={handleSubmit} className="m-4 mt-8">
-                    <label htmlFor="email" className="flex gap-2 mb-4 ml-1">
+                <form onSubmit={handleSubmit} className="m-4 md:mt-8">
+                    <label
+                        htmlFor="email"
+                        className="flex gap-2 mb-2 md:mb-4 ml-1"
+                    >
                         Registered Email <Mail />
                     </label>
                     <input
@@ -61,10 +67,10 @@ export const ForgotPasswordPage = () => {
                     />
                     <button
                         type="submit"
-                        className="flex justify-center mx-auto h-full w-50 md:w-90 gap-3 bg-linear-to-r from-emerald-500 to-teal-400 p-1 md:p-3 rounded-xl text-black font-bold text-sm md:text-md cursor-pointer hover:shadow hover:shadow-emerald-500 hover:transition-all hover:duration-300 hover:ease-in-out active:shadow active:shadow-emerald-500 transform active:translate-y-1 active:scale-95 transition-all duration-100 mt-8"
+                        className="flex justify-center mx-auto h-full w-50 md:w-90 gap-3 bg-linear-to-r from-emerald-500 to-teal-400 p-1 md:p-3 rounded-xl text-black font-bold text-sm md:text-md cursor-pointer hover:shadow hover:shadow-emerald-500 hover:transition-all hover:duration-300 hover:ease-in-out active:shadow active:shadow-emerald-500 transform active:translate-y-1 active:scale-95 transition-all duration-100 mt-5 md:mt-8"
+                        disabled={isSendingEmail}
                     >
-                        Send Reset Link
-                        {/* Please wait… */}
+                        {isSendingEmail ? "Please wait…" : "Send Reset Link"}
                     </button>
                 </form>
                 <p className="text-center text-xl">
@@ -77,12 +83,13 @@ export const ForgotPasswordPage = () => {
                     </Link>
                 </p>
             </div>
-            <p className="absolute bottom-2 italic text-sm text-slate-500">Still stuck?{" "}
+            <p className="absolute bottom-1 md:bottom-2 italic text-sm text-slate-500">
+                Still stuck?{" "}
                 <Link
                     to={"/support"}
                     className="text-emerald-500 text-xs md:text-sm"
                 >
-                Contact Support
+                    Contact Support
                 </Link>
             </p>
         </div>
