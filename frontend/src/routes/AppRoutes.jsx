@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { ForgotPasswordPage } from "../pages/auth/ForgotPasswordPage.jsx";
 import { ResetPasswordPage } from "../pages/auth/ResetPasswordPage.jsx";
+import { CheckEmailPage } from "../pages/auth/CheckEmailPage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuth();
@@ -27,7 +28,6 @@ export default function AppRoutes() {
     }
 
     return (
-        <BrowserRouter>
             <Routes>
                 {/* Public routes */}
                 <Route
@@ -68,10 +68,11 @@ export default function AppRoutes() {
                     element={<ForgotPasswordPage />}
                 />
 
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-                <Route path="/verify/:token" element={<VerifyEmailPage />} />
+            <Route path="/verify/:token" element={<VerifyEmailPage />} />
+            
+            <Route path="/check-email" element={<CheckEmailPage/>} />
             </Routes>
-        </BrowserRouter>
     );
 }

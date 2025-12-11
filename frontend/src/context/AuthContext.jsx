@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
@@ -11,15 +12,17 @@ export function AuthProvider({ children }) {
     const [isSendingEmail, setIsSendingEmail] = useState(false); //Forgot password states
     const [isResettingPassword, setIsResettingPassword] = useState(false); //Reset password states
 
+    const navigate = useNavigate();
+
     const checkAuth = async () => {
         setIsCheckingAuth(true);
 
         try {
             const res = await fetch("/api/v1/auth/profile", {
                 method: "GET",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    credentials: "include",
                     accept: "application/json",
                 },
             });
@@ -46,9 +49,9 @@ export function AuthProvider({ children }) {
         try {
             const res = await fetch("/api/v1/auth/register", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    credentials: "include",
                     accept: "application/json",
                 },
                 body: JSON.stringify(formData),
@@ -56,9 +59,13 @@ export function AuthProvider({ children }) {
 
             const data = res.json();
 
-            setAuthUser(data);
-
-            toast.success(data.message);
+            if (data.statusCode < 400) {
+                toast.success(data.message);
+                setAuthUser(data);
+                navigate("/", { replace: true });
+            } else {
+                toast.error(data.message);
+            }
         } catch (error) {
             console.error("Error signing up: ", error);
             toast.error("Error signing up");
@@ -73,9 +80,9 @@ export function AuthProvider({ children }) {
         try {
             const res = await fetch("/api/v1/auth/login", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    credentials: "include",
                     accept: "application/json",
                 },
                 body: JSON.stringify(formData),
@@ -83,8 +90,13 @@ export function AuthProvider({ children }) {
 
             const data = await res.json();
 
-            setAuthUser(data);
-            toast.success(data.message);
+            if (data.statusCode < 400) {
+                toast.success(data.message);
+                setAuthUser(data);
+                navigate("/", { replace: true });
+            } else {
+                toast.error(data.message);
+            }
         } catch (error) {
             console.log("Error logging in", error);
             toast.error("Error logging in");
@@ -97,9 +109,9 @@ export function AuthProvider({ children }) {
         try {
             await fetch("/api/v1/auth/logout", {
                 method: "GET",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    credentials: "include",
                     accept: "application/json",
                 },
             });
@@ -113,23 +125,29 @@ export function AuthProvider({ children }) {
         }
     };
 
-    const forgotPassword = async (email) => {
+    const forgotPassword = async (formData) => {
         setIsSendingEmail(true);
 
         try {
             const res = await fetch("/api/v1/auth/forgot-password", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    credentials: "include",
                     accept: "application/json",
                 },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify(formData),
             });
 
             const data = await res.json();
 
-            toast.success(data.message);
+            if (data.statusCode < 400) {
+                toast.success(data.message);
+
+                navigate("/check-email");
+            } else {
+                toast.error(data.message);
+            }
         } catch (error) {
             console.error("Error sending email: ", error);
             toast.error("Error sending email");
@@ -138,23 +156,29 @@ export function AuthProvider({ children }) {
         }
     };
 
-    const resetPassword = async (token, password) => {
+    const resetPassword = async (token, formData) => {
         setIsResettingPassword(true);
+
+        const { password } = formData.password;
 
         try {
             const res = await fetch(`/api/v1/auth/reset-password/${token}`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    credentials: "include",
                     accept: "application/json",
                 },
-                body: JSON.stringify({ password }),
+                body: JSON.stringify(formData),
             });
 
-            const data = res.json();
-
-            toast.success(data.message);
+            if (res.status < 400) {
+                const data = res.json();
+                toast.success(data.message);
+                navigate("/");
+            } else {
+                toast.error(res.error);
+            }
         } catch (error) {
             console.error("Error resetting password: ", error);
             toast.error("Error resetting password");

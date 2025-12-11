@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 
 export const ResetPasswordPage = () => {
     const { isResettingPassword, resetPassword } = useAuth();
+
+    const { token } = useParams();
 
     const [form, setForm] = useState({ password: "", confirm: "" });
 
@@ -14,7 +16,8 @@ export const ResetPasswordPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        resetPassword(form);
+        console.log(form);
+        resetPassword(token, form);
     };
 
     const handleChange = (e) => {
