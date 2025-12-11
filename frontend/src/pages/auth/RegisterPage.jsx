@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 function RegisterPage() {
+    const navigate = useNavigate();
+
     const [form, setForm] = useState({
         fullname: "",
         username: "",
@@ -20,7 +23,15 @@ function RegisterPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        signup(form);
+        const res = signup(form);
+
+        if (res.ok) {
+            toast.success(res.data.message);
+            navigate("/")
+        }
+        else {
+            toast.error(res.data.message);
+        }
     };
 
     const handleChange = (e) => {

@@ -1,11 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { HomeIcon, FolderKanbanIcon, StickyNoteIcon } from "lucide-react";
+import { FolderKanbanIcon, StickyNoteIcon, NotepadText } from "lucide-react";
+// import { useAuth } from "../../context/AuthContext";
 
 function DashboardPage() {
+    // const { logout } = useAuth();
+
+    // const handleLogout = (e) => {
+    //     e.preventDefault();
+    //     logout();
+    // };
+
     return (
-        <div className="flex items-center justify-center h-screen w-screen p-10">
-            <aside className="absolute left-0 p-2 border-r border-slate-800 h-full flex  flex-col">
+        <div className="flex items-center h-screen w-screen">
+            <aside className="absolute top-0 justify-self-start p-2 border-r border-slate-800 h-full flex  flex-col">
                 <div className="p-8 text-center border-b border-slate-800">
                     <h1 className="text-4xl bg-linear-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent font-bold p-2">
                         Manago
@@ -15,13 +23,7 @@ function DashboardPage() {
                     </p>
                 </div>
 
-                <nav className="flex-1 w-full p-4 space-y-3">
-                    <Link
-                        to={"/"}
-                        className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-2xl px-5 py-4"
-                    >
-                        <HomeIcon /> Dashboard
-                    </Link>
+                <div className="flex-1 w-full p-4 space-y-3">
                     <Link
                         to={"/projects"}
                         className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-2xl px-5 py-4"
@@ -34,7 +36,13 @@ function DashboardPage() {
                     >
                         <StickyNoteIcon /> Tasks
                     </Link>
-                </nav>
+                    <Link
+                        to={"/"}
+                        className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-2xl px-5 py-4"
+                    >
+                        <NotepadText /> Notes
+                    </Link>
+                </div>
             </aside>
         </div>
     );

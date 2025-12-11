@@ -10,6 +10,8 @@ import { Loader } from "lucide-react";
 import { ForgotPasswordPage } from "../pages/auth/ForgotPasswordPage.jsx";
 import { ResetPasswordPage } from "../pages/auth/ResetPasswordPage.jsx";
 import { CheckEmailPage } from "../pages/auth/CheckEmailPage.jsx";
+import { ChangeCurrentPasswordPage } from "../pages/auth/ChangeCurrentPasswordPage.jsx";
+import { Layout } from "../layout/Layout.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuth();
@@ -19,7 +21,7 @@ export default function AppRoutes() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (isCheckingAuth) {
+    if (isCheckingAuth && !authUser) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Loader className="size-10 animate-spin" />
@@ -28,30 +30,34 @@ export default function AppRoutes() {
     }
 
     return (
-            <Routes>
-                {/* Public routes */}
-                <Route
-                    path="/login"
-                    element={
-                        !authUser ? (
-                            <LoginPage />
-                        ) : (
-                            <Navigate to={"/"} replace />
-                        )
-                    }
-                />
-                <Route
-                    path="/register"
-                    element={
-                        !authUser ? (
-                            <RegisterPage />
-                        ) : (
-                            <Navigate to={"/"} replace />
-                        )
-                    }
-                />
+        <Routes>
+            {/* Public routes */}
+            <Route
+                path="/login"
+                element={
+                    !authUser ? <LoginPage /> : <Navigate to={"/"} replace />
+                }
+            />
+            <Route
+                path="/register"
+                element={
+                    !authUser ? <RegisterPage /> : <Navigate to={"/"} replace />
+                }
+            />
 
-                {/* Protected routes */}
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+            <Route
+                path="/reset-password/:token"
+                element={<ResetPasswordPage />}
+            />
+
+            <Route path="/verify/:token" element={<VerifyEmailPage />} />
+
+            <Route path="/check-email" element={<CheckEmailPage />} />
+
+            {/* Protected routes */}
+            <Route path="/" element={<Layout />}>
                 <Route
                     path="/"
                     element={
@@ -62,17 +68,18 @@ export default function AppRoutes() {
                         )
                     }
                 />
+            </Route>
 
-                <Route
-                    path="/forgot-password"
-                    element={<ForgotPasswordPage />}
-                />
-
-                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-
-            <Route path="/verify/:token" element={<VerifyEmailPage />} />
-            
-            <Route path="/check-email" element={<CheckEmailPage/>} />
-            </Routes>
+            <Route
+                path="/change-password"
+                element={
+                    authUser ? (
+                        <ChangeCurrentPasswordPage />
+                    ) : (
+                        <Navigate to={"/login"} />
+                    )
+                }
+            />
+        </Routes>
     );
 }

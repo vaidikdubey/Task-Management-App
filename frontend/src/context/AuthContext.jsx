@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
@@ -11,8 +10,7 @@ export function AuthProvider({ children }) {
     const [isCheckingAuth, setIsCheckingAuth] = useState(false);
     const [isSendingEmail, setIsSendingEmail] = useState(false); //Forgot password states
     const [isResettingPassword, setIsResettingPassword] = useState(false); //Reset password states
-
-    const navigate = useNavigate();
+    const [isChangingPassword, setIsChangingPassword] = useState(false); //Change password states
 
     const checkAuth = async () => {
         setIsCheckingAuth(true);
@@ -28,6 +26,7 @@ export function AuthProvider({ children }) {
             });
 
             if (res.status !== 200) {
+                setAuthUser(null);
                 console.error("Error checking user: ", res.error);
                 toast.error("Error authenticating");
             }
@@ -60,12 +59,10 @@ export function AuthProvider({ children }) {
             const data = res.json();
 
             if (data.statusCode < 400) {
-                toast.success(data.message);
-                setAuthUser(data);
-                navigate("/", { replace: true });
-            } else {
-                toast.error(data.message);
+                setAuthUser(data);   
             }
+
+            return { ok: res.ok, data };
         } catch (error) {
             console.error("Error signing up: ", error);
             toast.error("Error signing up");
@@ -91,12 +88,10 @@ export function AuthProvider({ children }) {
             const data = await res.json();
 
             if (data.statusCode < 400) {
-                toast.success(data.message);
                 setAuthUser(data);
-                navigate("/", { replace: true });
-            } else {
-                toast.error(data.message);
             }
+
+            return { ok: res.ok, data };
         } catch (error) {
             console.log("Error logging in", error);
             toast.error("Error logging in");
@@ -141,13 +136,7 @@ export function AuthProvider({ children }) {
 
             const data = await res.json();
 
-            if (data.statusCode < 400) {
-                toast.success(data.message);
-
-                navigate("/check-email");
-            } else {
-                toast.error(data.message);
-            }
+            return { ok: res.ok, data };
         } catch (error) {
             console.error("Error sending email: ", error);
             toast.error("Error sending email");
@@ -159,7 +148,7 @@ export function AuthProvider({ children }) {
     const resetPassword = async (token, formData) => {
         setIsResettingPassword(true);
 
-        const { password } = formData.password;
+        const { password } = formData;
 
         try {
             const res = await fetch(`/api/v1/auth/reset-password/${token}`, {
@@ -169,21 +158,48 @@ export function AuthProvider({ children }) {
                     "Content-Type": "application/json",
                     accept: "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ password }),
             });
 
-            if (res.status < 400) {
-                const data = res.json();
-                toast.success(data.message);
-                navigate("/");
-            } else {
-                toast.error(res.error);
-            }
+            const data = res.json();
+            
+            return { ok: res.ok, data };
         } catch (error) {
             console.error("Error resetting password: ", error);
             toast.error("Error resetting password");
         } finally {
             setIsResettingPassword(false);
+        }
+    };
+
+    const changePassword = async (formData) => {
+        setIsChangingPassword(true);
+
+        try {
+            const { oldPassword, password } = formData;
+
+            const res = await fetch("/api/v1/auth/change-password", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    accept: "application/json",
+                },
+                body: JSON.stringify({ oldPassword, password }),
+            });
+
+            const data = await res.json();
+
+            if (data.statusCode < 400) {
+                return {ok: res.ok, data}
+            } else {
+                return {ok: res.ok, data}
+            }
+        } catch (error) {
+            console.error("Error updating password: ", error);
+            toast.error("Error updating password");
+        } finally {
+            setIsChangingPassword(false);
         }
     };
 
@@ -196,12 +212,14 @@ export function AuthProvider({ children }) {
                 isCheckingAuth,
                 isSendingEmail,
                 isResettingPassword,
+                isChangingPassword,
                 checkAuth,
                 signup,
                 login,
                 logout,
                 forgotPassword,
                 resetPassword,
+                changePassword,
             }}
         >
             {children}
