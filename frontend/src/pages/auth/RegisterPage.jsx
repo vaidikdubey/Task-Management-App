@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/useAuthStore";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -19,19 +18,13 @@ function RegisterPage() {
 
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const { isSigninUp, signup } = useAuth();
+    const {isSigninUp, signup} = useAuthStore()
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const res = signup(form);
-
-        if (res.ok) {
-            toast.success(res.data.message);
-            navigate("/")
-        }
-        else {
-            toast.error(res.data.message);
-        }
+        signup(form);
+        
+        navigate("/");
     };
 
     const handleChange = (e) => {

@@ -1,25 +1,24 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore.js";
 
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import VerifyEmailPage from "../pages/auth/VerifyEmailPage";
 import DashboardPage from "../pages/dashboard/DashboardPage.jsx";
-import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { ForgotPasswordPage } from "../pages/auth/ForgotPasswordPage.jsx";
 import { ResetPasswordPage } from "../pages/auth/ResetPasswordPage.jsx";
 import { CheckEmailPage } from "../pages/auth/CheckEmailPage.jsx";
 import { ChangeCurrentPasswordPage } from "../pages/auth/ChangeCurrentPasswordPage.jsx";
 import { Layout } from "../layout/Layout.jsx";
+import { useEffect } from "react";
 
 export default function AppRoutes() {
-    const { authUser, isCheckingAuth, checkAuth } = useAuth();
+    const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
 
     useEffect(() => {
         checkAuth();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [checkAuth]);
 
     if (isCheckingAuth && !authUser) {
         return (
@@ -35,7 +34,7 @@ export default function AppRoutes() {
             <Route
                 path="/login"
                 element={
-                    !authUser ? <LoginPage /> : <Navigate to={"/"} replace />
+                    authUser ? <Navigate to={"/"} replace /> : <LoginPage />
                 }
             />
             <Route
@@ -57,7 +56,12 @@ export default function AppRoutes() {
             <Route path="/check-email" element={<CheckEmailPage />} />
 
             {/* Protected routes */}
-            <Route path="/" element={<Layout />}>
+            <Route
+                path="/"
+                element={
+                    authUser ? <Layout /> : <Navigate to={"/login"} replace />
+                }
+            >
                 <Route
                     path="/"
                     element={

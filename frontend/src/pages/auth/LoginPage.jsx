@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext.jsx";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/useAuthStore.js";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -15,19 +14,13 @@ function LoginPage() {
 
     const [showPassword, setShowPassword] = useState(false);
 
-    const { isLoggingIn, login } = useAuth();
+    const { isLoggingIn, login } = useAuthStore();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const res = login(form);
+        login(form);
 
-        if (res.ok) {
-            toast.success(res.data.message);
-            navigate("/")
-        }
-        else {
-            toast.error(res.data.message);
-        }
+        navigate("/");
     };
 
     const handleChange = (e) => {

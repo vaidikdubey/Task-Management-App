@@ -1,27 +1,20 @@
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export const ForgotPasswordPage = () => {
     const navigate = useNavigate();
 
-    const { isSendingEmail, forgotPassword } = useAuth();
+    const { isSendingEmail, forgotPassword } = useAuthStore();
 
     const [email, setEmail] = useState({ email: "" });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const res = forgotPassword(email);
-
-        if (res.ok) {
-            toast.success(res.data.message);
-            navigate("/check-email")
-        }
-        else {
-            toast.error(res.data.message);
-        }
+        forgotPassword(email);
+            
+        navigate("/check-email")
     };
 
     const handleChange = (e) => {

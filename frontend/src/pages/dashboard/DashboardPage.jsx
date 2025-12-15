@@ -1,16 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FolderKanbanIcon, StickyNoteIcon, NotepadText } from "lucide-react";
-// import { useAuth } from "../../context/AuthContext";
+
 
 function DashboardPage() {
-    // const { logout } = useAuth();
-
-    // const handleLogout = (e) => {
-    //     e.preventDefault();
-    //     logout();
-    // };
-
     return (
         <div className="flex items-center h-screen w-screen">
             <aside className="absolute top-0 justify-self-start p-2 border-r border-slate-800 h-full flex  flex-col">

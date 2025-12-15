@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/useAuthStore.js";
 
 export const ResetPasswordPage = () => {
     const navigate = useNavigate();
 
-    const { isResettingPassword, resetPassword } = useAuth();
+    const { isResettingPassword, resetPassword } = useAuthStore();
 
     const { token } = useParams();
 
@@ -19,15 +18,9 @@ export const ResetPasswordPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const res = resetPassword(token, form);
-
-        if (res.ok) {
-            toast.success(res.data.message);
-            navigate("/");
-        }
-        else {
-            toast.error(res.data.message);
-        }
+        resetPassword(token, form);
+            
+        navigate("/");
     };
 
     const handleChange = (e) => {
