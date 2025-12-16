@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../../store/useAuthStore.js";
 import { useProjectStore } from "../../store/useProjectStore.js";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
     const { authUser, logout } = useAuthStore();
@@ -9,7 +10,44 @@ export const Navbar = () => {
     const { isGettingProjects, allProjects, getAllProjects } =
         useProjectStore();
 
-    const toggleMenu = () => {};
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const [isProjectMenuOpen, setIsProjectMenuOpen] = useState(false);
+    const dropdownProjectRef = useRef(null);
+
+    //Dropown Menu functionality
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(e.target)
+            ) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+
+        return () => document.removeEventListener("click", handleClickOutside);
+    });
+
+    //Dropdown Project functionality
+    useEffect(() => {
+        const handleClickOutsideProject = (e) => {
+            if (
+                dropdownProjectRef.current &&
+                !dropdownProjectRef.current.contains(e.target)
+            ) {
+                setIsProjectMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutsideProject);
+
+        return () =>
+            document.removeEventListener("click", handleClickOutsideProject);
+    });
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -35,8 +73,17 @@ export const Navbar = () => {
                         </span>
                     </li>
                     <li className="flex gap-4 items-center justify-center">
-                        <div className="flex gap-4 justify-center items-center">
-                            <div className="flex items-center justify-center gap-2 text-gray-300 bg-slate-600/50 p-2 rounded-xl">
+                        {/* Projects section */}
+                        <div
+                            className="flex gap-4 justify-center items-center relative"
+                            ref={dropdownProjectRef}
+                        >
+                            <div
+                                className="flex items-center justify-center gap-2 text-gray-300 bg-slate-600/50 p-2 rounded-xl cursor-pointer"
+                                onClick={() =>
+                                    setIsProjectMenuOpen(!isProjectMenuOpen)
+                                }
+                            >
                                 {isGettingProjects || allProjects?.length <= 0
                                     ? "Fetching..."
                                     : allProjects[0]?.name}
@@ -65,43 +112,99 @@ export const Navbar = () => {
                                     </svg>
                                 </div>
                             </div>
-
-                            <div>Profile Image</div>
+                            {isProjectMenuOpen && (
+                                <div className="absolute top-10 -right-25 -translate-x-1/2 mt-6 w-48 bg-slate-950/60 rounded-md shadow-lg border border-gray-200 z-50">
+                                    <div className="py-1">
+                                        {allProjects.map((project, idx) => (
+                                            <>
+                                                <Link
+                                                    key={project._id}
+                                                    to={`/project/${project._id}`}
+                                                    className="block px-3 py-2 text-sm text-white hover:bg-slate-800"
+                                                >
+                                                    {idx + 1}. {project?.name}
+                                                </Link>
+                                                {idx <
+                                                    allProjects.length - 1 && (
+                                                    <hr className="my-1 border-gray-600" />
+                                                )}
+                                            </>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                        <div className="cursor-pointer" onClick={toggleMenu}>
-                            {authUser.data.avatar ? (
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="50"
-                                    height="50"
-                                    viewBox="0 0 40 40"
-                                >
-                                    <circle
-                                        cx="20"
-                                        cy="20"
-                                        r="20"
-                                        fill="#e5e7eb"
-                                    />
-                                    <circle
-                                        cx="20"
-                                        cy="14"
-                                        r="6"
-                                        fill="#9ca3af"
-                                    />
-                                    <path
-                                        d="M10 30c0-5 4-9 10-9s10 4 10 9"
-                                        fill="#9ca3af"
-                                    />
-                                </svg>
-                            ) : (
-                                authUser.data.avatar
+                        {/* Dropdown menu */}
+                        <div className="relative" ref={dropdownRef}>
+                            <div
+                                className="cursor-pointer"
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            >
+                                {authUser.data.data.avatar.url ===
+                                    `https://placehold.co/600x400` &&
+                                authUser.data.data.avatar.localpath === "" ? (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="50"
+                                        height="50"
+                                        viewBox="0 0 40 40"
+                                    >
+                                        <circle
+                                            cx="20"
+                                            cy="20"
+                                            r="20"
+                                            fill="currentColor"
+                                        />
+                                        <circle
+                                            cx="20"
+                                            cy="14"
+                                            r="6"
+                                            fill="#9ca3af"
+                                        />
+                                        <path
+                                            d="M10 30c0-5 4-9 10-9s10 4 10 9"
+                                            fill="#9ca3af"
+                                        />
+                                    </svg>
+                                ) : (
+                                    authUser.data.data.avatar.url
+                                )}
+                            </div>
+                            {isMenuOpen && (
+                                <div className="absolute -left-10 -translate-x-1/2 mt-4 w-48 bg-slate-950/60 rounded-md shadow-lg border border-gray-200 z-50">
+                                    <div className="py-1">
+                                        <Link
+                                            to={"/profile"}
+                                            className="block px-4 py-2 text-sm text-white hover:bg-slate-800"
+                                        >
+                                            View Profile
+                                        </Link>
+                                        <Link
+                                            to={"/edit-profile"}
+                                            className="block px-4 py-2 text-sm text-white hover:bg-slate-800"
+                                        >
+                                            Edit Profile
+                                        </Link>
+                                        <Link
+                                            to={"/settings"}
+                                            className="block px-4 py-2 text-sm text-white hover:bg-slate-800"
+                                        >
+                                            Account Settings
+                                        </Link>
+                                        <hr className="my-1 border-gray-200" />
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-700"
+                                        >
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </li>
                 </ul>
             </nav>
-
-            <button onClick={handleLogout} className="absolute right-70 top-4 p-2 rounded-2xl bg-teal-400 text-black font-bold cursor-pointer">Logout</button>
         </>
     );
 };
