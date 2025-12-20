@@ -12,6 +12,8 @@ import { CheckEmailPage } from "../pages/auth/CheckEmailPage.jsx";
 import { ChangeCurrentPasswordPage } from "../pages/auth/ChangeCurrentPasswordPage.jsx";
 import { Layout } from "../layout/Layout.jsx";
 import { useEffect } from "react";
+import { ProfilePage } from "../pages/auth/ProfilePage.jsx";
+import { EditProfilePage } from "../pages/auth/EditProfilePage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -82,6 +84,20 @@ export default function AppRoutes() {
                     ) : (
                         <Navigate to={"/login"} />
                     )
+                }
+            />
+
+            <Route
+                path="/profile"
+                element={
+                    authUser ? <ProfilePage /> : <Navigate to={"/login"} />
+                }
+            />
+
+            <Route
+                path="/edit-profile"
+                element={
+                    authUser ? <EditProfilePage /> : <Navigate to={"/login"} />
                 }
             />
         </Routes>
