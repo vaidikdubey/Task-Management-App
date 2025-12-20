@@ -74,8 +74,8 @@ export const isLoggedIn = async function (req, res, next) {
 
             return next()
         } catch (error) {
-            return res.status(400)
-                .json(new ApiResponse(400, {message: "Unauthorised"}, "Unauthorised access"))
+            return res.status(401)
+                .json(new ApiResponse(401, {message: "Unauthorised"}, "Unauthorised access"))
         }
     }
 }

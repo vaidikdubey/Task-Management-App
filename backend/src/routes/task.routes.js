@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createSubTask, createTask, deleteSubTask, deleteTask, getTaskById, getTasks, updateSubTask, updateTask } from "../controllers/task.controllers.js";
+import { createSubTask, createTask, deleteSubTask, deleteTask, getCompletedTasksCount, getTaskById, getTasks, updateSubTask, updateTask } from "../controllers/task.controllers.js";
 import { isLoggedIn, validateProjectPermission } from "../middlewares/auth.middleware.js";
 import { AvailableUserRoles, UserRolesEnum } from "../utils/constants.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -27,6 +27,11 @@ router
     .route("/:projectId/delete/:taskId")
     .delete(isLoggedIn, validateProjectPermission([UserRolesEnum.ADMIN, UserRolesEnum.PROJECT_ADMIN]), deleteTask);
 
+router
+    .route("/completed-count")
+    .get(isLoggedIn, getCompletedTasksCount);
+
+//Subtask routes
 router
     .route("/subtask/:projectId/create/:taskId")
     .post(isLoggedIn, validateProjectPermission(AvailableUserRoles), createSubTask);

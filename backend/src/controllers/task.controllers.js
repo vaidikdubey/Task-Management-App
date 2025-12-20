@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/api-response.js";
 import { Task } from "../models/task.models.js";
 import { SubTask } from "../models/subtask.models.js";
 import { UserRolesEnum } from "../utils/constants.js";
+import { Project } from "../models/project.models.js";
 
 const getTasks = asyncHandler(async (req, res) => {
   //get project id from req.params
@@ -13,8 +14,6 @@ const getTasks = asyncHandler(async (req, res) => {
   //return response
 
   const { projectId } = req.params;
-
-  console.log(projectId);
 
   if (!projectId) {
     throw new ApiError(400, "Project id is required");
@@ -255,6 +254,44 @@ const deleteSubTask = asyncHandler(async (req, res) => {
   }
 });
 
+const getCompletedTasksCount = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const projects = await Project.find({
+      createdBy: userId
+    }).select("_id");
+  
+    const projectIds = projects.map(p => p._id);
+  
+    const stats = await Task.aggregate([
+      {
+        $match: {
+          project: { $in: projectIds },
+          status: "done"
+        }
+      },
+      {
+        $group: {
+          _id: "$project",
+          count: { $sum: 1 }
+        }
+      }
+    ])
+  
+    const result = {};
+  
+    stats.forEach(s => {
+      result[s._id] = s.count
+    })
+
+    return res.status(200)
+      .json(new ApiResponse(200, result, "Completed tasks count fetched successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Error fetching completed tasks count", [error], error.stack);
+  }
+})
+
 export {
   createSubTask,
   createTask,
@@ -264,4 +301,5 @@ export {
   getTasks,
   updateSubTask,
   updateTask,
+  getCompletedTasksCount
 };
