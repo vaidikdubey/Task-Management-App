@@ -67,7 +67,7 @@ export const Navbar = () => {
     }, [getAllProjects]);
 
     return (
-        <nav className="absolute inset-x-0 top-0 w-2xl mx-auto bg-slate-950/90 backdrop-blur-xl mt-2 p-2 px-4 rounded-[999px]">
+        <nav className="relative w-2xl mx-auto bg-slate-950/90 backdrop-blur-xl mt-2 p-2 px-4 rounded-[999px]">
             <ul className="flex items-center justify-between">
                 <li>
                     Welcome,{" "}
@@ -122,27 +122,65 @@ export const Navbar = () => {
                             </div>
                         </div>
                         {isProjectMenuOpen && (
-                            <div className="absolute top-10 -right-25 -translate-x-1/2 mt-6 w-48 bg-slate-950/60 rounded-md shadow-lg border border-gray-200 z-50">
+                            <div className="absolute top-10 -right-25 -translate-x-1/2 mt-6 w-48 bg-slate-950/90 rounded-md shadow-lg border border-gray-200 z-50 max-h-80 overflow-y-auto no-scrollbar">
                                 <div className="py-1">
-                                    {allProjects.map((project, idx) => (
-                                        <div key={project._id}>
-                                            <Link
-                                                onClick={() => {
-                                                    setSelectedProject(project);
-                                                    setIsProjectMenuOpen(false);
-                                                    getAllProjectMembers(
-                                                        project._id
-                                                    );
-                                                }}
-                                                className="block px-3 py-2 text-sm text-white hover:bg-slate-800"
-                                            >
-                                                {idx + 1}. {project?.name}
-                                            </Link>
-                                            {idx < allProjects.length - 1 && (
-                                                <hr className="my-1 border-gray-600" />
-                                            )}
-                                        </div>
-                                    ))}
+                                    {allProjects.map((project, idx) => {
+                                        const isSelected =
+                                            selectedProject?._id ===
+                                            project._id;
+
+                                        return (
+                                            <div key={project._id}>
+                                                <button
+                                                    onClick={() => {
+                                                        if (
+                                                            selectedProject?._id ===
+                                                            project._id
+                                                        ) {
+                                                            setSelectedProject(
+                                                                null
+                                                            );
+                                                        } else {
+                                                            setSelectedProject(
+                                                                project
+                                                            );
+                                                            getAllProjectMembers(
+                                                                project._id
+                                                            );
+                                                        }
+                                                        setIsProjectMenuOpen(
+                                                            false
+                                                        );
+                                                    }}
+                                                    className={`block px-3 py-2 text-sm w-full text-left cursor-pointer
+                                                        ${
+                                                            isSelected
+                                                                ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                                                                : "text-white hover:bg-slate-800"
+                                                        }
+                                                        `}
+                                                >
+                                                    {idx + 1}. {project?.name}
+                                                </button>
+                                                {idx <
+                                                    allProjects.length - 1 && (
+                                                    <hr className="my-1 border-gray-600" />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div className="mb-1.5">
+                                    <hr className="pt-1 border-gray-600" />
+                                    <button
+                                        onClick={() => {
+                                            setSelectedProject(null);
+                                            setIsProjectMenuOpen(false);
+                                        }}
+                                        className="block px-3 py-2 text-sm text-red-700 hover:bg-slate-800 w-full cursor-pointer"
+                                    >
+                                        Clear Selection
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -153,9 +191,9 @@ export const Navbar = () => {
                             className="cursor-pointer"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                         >
-                            {authUser.data.data.avatar.url ===
+                            {authUser?.data?.data?.avatar?.url ===
                                 `https://placehold.co/600x400` &&
-                            authUser.data.data.avatar.localpath === "" ? (
+                            authUser?.data?.data?.avatar?.localpath === "" ? (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="50"
@@ -180,11 +218,11 @@ export const Navbar = () => {
                                     />
                                 </svg>
                             ) : (
-                                authUser.data.data.avatar.url
+                                authUser?.data?.data?.avatar?.url
                             )}
                         </div>
                         {isMenuOpen && (
-                            <div className="absolute -left-10 -translate-x-1/2 mt-4 w-48 bg-slate-950/60 rounded-md shadow-lg border border-gray-200 z-50">
+                            <div className="absolute -left-10 -translate-x-1/2 mt-4 w-48 bg-slate-950/90 rounded-md shadow-lg border border-gray-200 z-50">
                                 <div className="py-1">
                                     <Link
                                         to={"/profile"}
@@ -207,7 +245,7 @@ export const Navbar = () => {
                                     <hr className="my-1 border-gray-200" />
                                     <button
                                         onClick={handleLogout}
-                                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-700"
+                                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-700 cursor-pointer"
                                     >
                                         Sign Out
                                     </button>

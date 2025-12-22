@@ -61,20 +61,13 @@ export default function AppRoutes() {
             <Route
                 path="/"
                 element={
-                    authUser ? <Layout /> : <Navigate to={"/login"} replace />
+                    authUser ? (
+                        <DashboardPage />
+                    ) : (
+                        <Navigate to={"/login"} replace />
+                    )
                 }
-            >
-                <Route
-                    path="/"
-                    element={
-                        authUser ? (
-                            <DashboardPage />
-                        ) : (
-                            <Navigate to={"/login"} replace />
-                        )
-                    }
-                />
-            </Route>
+            />
 
             <Route
                 path="/change-password"

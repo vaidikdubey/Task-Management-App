@@ -61,4 +61,15 @@ export const useProjectStore = create((set, get) => ({
             toast.error("Error fetching project members");
         }
     },
+
+    deleteProject: async (projectId) => {
+        try {
+            const res = await axiosInstance.delete(`/project/delete/${projectId}`)
+
+            toast.success(res.message || "Project deleted successfull");
+        } catch (error) {
+            console.error("Error deleting project: ", error);
+            toast.error("Error deleting project");
+        }
+    }
 }));
