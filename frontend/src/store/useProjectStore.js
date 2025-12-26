@@ -50,12 +50,7 @@ export const useProjectStore = create((set, get) => ({
                 },
             }));
 
-            set((state) => ({
-                allProjectMembers: {
-                    ...state.allProjectMembers,
-                    [projectId]: res.data.data,
-                },
-            }));
+            set({ allProjectMembers: res.data.data });
             if (!get().hasShownMemberToast) {
                 toast.success(
                     res.message || "Project members fetched successfully"

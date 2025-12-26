@@ -5,23 +5,19 @@ import { useProjectStore } from "../../store/useProjectStore.js";
 export const MembersView = () => {
     const { projectId } = useParams();
 
-    const { projectMembers, getAllProjectMembers, allProjectMembers } =
-        useProjectStore();
+    const { getAllProjectMembers, allProjectMembers } = useProjectStore();
 
     useEffect(() => {
         getAllProjectMembers(projectId);
     }, [projectId]);
 
-    const userObjectArray = Object.values(allProjectMembers).map(
-        (inside) => inside[0].user
-    );
+    // const userObjectArray = Object.values(allProjectMembers).map(
+    //     (inside) => inside[0].user
+    // );
 
-    console.log(userObjectArray);
+    const userObjectArray = allProjectMembers.map((member) => member.user);
 
-    const allMembers = Object.values(projectMembers).reduce(
-        (acc, curr) => acc + curr,
-        0
-    );
+    const allMembers = allProjectMembers?.length;
 
     return (
         <div className="flex justify-center items-center flex-col gap-5 my-5">
@@ -36,16 +32,19 @@ export const MembersView = () => {
             {/* Detailed members view table */}
             <div className="bg-slate-900/70 backdrop-blur border-2 border-slate-800 rounded-lg shadow-lg  max-h-[calc(100vh-12rem)] overflow-y-auto no-scrollbar grid grid-cols-3 gap-5 w-full p-5">
                 {userObjectArray.map((user) => (
-                    <div class="bg-slate-900/60 backdrop-blur border border-slate-800 rounded-3xl p-8 flex items-center gap-6 shadow-2xl shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all duration-300 cursor-pointer">
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-white">
+                    <div
+                        className="bg-slate-900/60 backdrop-blur border border-slate-800 rounded-3xl p-8 flex items-center gap-6 shadow-2xl shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all duration-300 cursor-pointer"
+                        key={user._id}
+                    >
+                        <div className="flex-1">
+                            <h3 className="text-xl font-bold text-white">
                                 {user.fullname}
                             </h3>
-                            <p class="text-emerald-300 font-medium">
+                            <p className="text-emerald-300 font-medium">
                                 @{user.username}
                             </p>
                         </div>
-                        <div class="text-right">
+                        <div className="text-right">
                             {user.avatar.url ===
                                 `https://placehold.co/600x400` &&
                             user.avatar.localpath === "" ? (
