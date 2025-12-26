@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useProjectStore } from "../../store/useProjectStore.js";
 import { KanbanBoard } from "../projects/KanbanBoard.jsx";
 import { ListView } from "../projects/ListView.jsx";
 import { MembersView } from "../projects/MembersView.jsx";
 import { NotesView } from "../projects/NotesView.jsx";
 import { ArrowBigLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export const ProjectPage = () => {
+    const { projectId } = useParams();
+
     const { project } = useProjectStore();
 
     const [form, setForm] = useState({ name: "" });
 
-    const [activeView, setActiveView] = useState("kanban");
+    const [activeView, setActiveView] = useState(() => {
+        return localStorage.getItem(`preferredView:${projectId}`) || "kanban";
+    });
+
+    useEffect(() => {
+        localStorage.setItem(`preferredView:${projectId}`, activeView);
+    }, [activeView]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -79,20 +87,22 @@ export const ProjectPage = () => {
                     </li>
                 </ul>
 
-                <div className="flex items-center justify-center py-4">
-                    <input
-                        id="name"
-                        type="text"
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="New Task..."
-                        className="w-fit px-2 py-2 bg-slate-800/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-lg font-medium   focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 transition-all duration-300"
-                    />
-                    <button className="mx-2 h-10 w-20 md:w-30 bg-linear-to-r from-emerald-500 to-teal-400 px-2 py-2 rounded-xl text-black font-bold text-sm md:text-md cursor-pointer hover:shadow hover:shadow-emerald-500 hover:transition-all hover:duration-300 hover:ease-in-out active:shadow active:shadow-emerald-500 transform active:translate-y-1 active:scale-95 transition-all duration-100">
-                        + Add Task
-                    </button>
-                </div>
+                {(activeView === "kanban" || activeView === "list") && (
+                    <div className="flex items-center justify-center py-4">
+                        <input
+                            id="name"
+                            type="text"
+                            name="name"
+                            value={form.name}
+                            onChange={handleChange}
+                            placeholder="New Task..."
+                            className="w-fit px-2 py-2 bg-slate-800/60 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-lg font-medium   focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 transition-all duration-300"
+                        />
+                        <button className="mx-2 h-10 w-20 md:w-30 bg-linear-to-r from-emerald-500 to-teal-400 px-2 py-2 rounded-xl text-black font-bold text-sm md:text-md cursor-pointer hover:shadow hover:shadow-emerald-500 hover:transition-all hover:duration-300 hover:ease-in-out active:shadow active:shadow-emerald-500 transform active:translate-y-1 active:scale-95 transition-all duration-100">
+                            + Add Task
+                        </button>
+                    </div>
+                )}
 
                 <div className="w-full">
                     {activeView === "kanban" && <KanbanBoard />}

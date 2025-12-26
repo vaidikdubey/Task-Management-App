@@ -8,8 +8,8 @@ import {
     SortableContext,
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { SortableTaskCard } from "./SortableTaskCard.jsx";
-import { DroppableColumn } from "./DroppableColumn.jsx";
+import { SortableTaskCard } from "./Kanban Components/SortableTaskCard.jsx";
+import { DroppableColumn } from "./Kanban Components/DroppableColumn.jsx";
 
 export const KanbanBoard = () => {
     const { projectId } = useParams();
