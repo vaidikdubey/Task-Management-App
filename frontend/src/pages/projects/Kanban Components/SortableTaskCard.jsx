@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { User, UserLock, Clock, ClockPlus } from "lucide-react";
-import { timeAgo } from "../../utils/timeAgo";
+import { timeAgo } from "../../../utils/timeAgo";
 
 export const SortableTaskCard = ({ task, borderColor }) => {
     const {
