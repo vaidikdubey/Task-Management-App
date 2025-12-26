@@ -4,19 +4,14 @@ import toast from "react-hot-toast";
 
 export const useTaskStore = create((set) => ({
     isGettingCompletedTasks: false,
-    tasksByProject: {},
+    tasksByProject: [],
     completedTasksByProject: {},
 
     getTasksByProject: async (projectId) => {
         try {
             const res = await axiosInstance.get(`/task/getAll/${projectId}`);
-            set((state) => ({
-                tasksByProject: {
-                    ...state.tasksByProject,
-                    [projectId]: res.data,
-                },
-            }));
-            toast.success(res.message || "Tasks fetched successfully");
+
+            set({ tasksByProject: res.data });
         } catch (error) {
             console.error("Error fetching tasks: ", error);
             toast.error("Error fetching tasks");
@@ -35,6 +30,22 @@ export const useTaskStore = create((set) => ({
             toast.error("Error fetching task count");
         } finally {
             set({ isGettingCompletedTasks: false });
+        }
+    },
+
+    updateTask: async (projectId, taskId, status) => {
+        try {
+            const res = await axiosInstance.patch(
+                `/task/${projectId}/update/${taskId}`,
+                { status }
+            );
+
+            toast.success(res.message || "Task updated successfully", {
+                duration: 1 * 1000,
+            });
+        } catch (error) {
+            console.error("Error updating task: ", error);
+            toast.error("Error updating task");
         }
     },
 }));

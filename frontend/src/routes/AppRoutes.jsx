@@ -14,6 +14,8 @@ import { Layout } from "../layout/Layout.jsx";
 import { useEffect } from "react";
 import { ProfilePage } from "../pages/auth/ProfilePage.jsx";
 import { EditProfilePage } from "../pages/auth/EditProfilePage.jsx";
+import { ProjectDashboard } from "../pages/projects/ProjectsDashboard.jsx";
+import { ProjectPage } from "../pages/projects/ProjectPage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -91,6 +93,20 @@ export default function AppRoutes() {
                 path="/edit-profile"
                 element={
                     authUser ? <EditProfilePage /> : <Navigate to={"/login"} />
+                }
+            />
+
+            <Route
+                path="/projects"
+                element={
+                    authUser ? <ProjectDashboard /> : <Navigate to={"/login"} />
+                }
+            />
+
+            <Route
+                path="/getProject/:projectId"
+                element={
+                    authUser ? <ProjectPage /> : <Navigate to={"/login"} />
                 }
             />
         </Routes>

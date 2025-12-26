@@ -10,6 +10,7 @@ export const useProjectStore = create((set, get) => ({
     projectMembers: {},
     hasShownAllMemberToast: false,
     hasShownAllProjectToast: false,
+    project: {},
 
     getAllProjects: async () => {
         set({ isGettingProjects: true });
@@ -45,15 +46,15 @@ export const useProjectStore = create((set, get) => ({
             set((state) => ({
                 projectMembers: {
                     ...state.projectMembers,
-                    [projectId]: res.data.data.length
-                }
-            }))
+                    [projectId]: res.data.data.length,
+                },
+            }));
 
             set({ allProjectMembers: res.data.data });
             if (!get().hasShownMemberToast) {
                 toast.success(
                     res.message || "Project members fetched successfully"
-                )
+                );
                 set({ hasShownMemberToast: true });
             }
         } catch (error) {
@@ -64,12 +65,28 @@ export const useProjectStore = create((set, get) => ({
 
     deleteProject: async (projectId) => {
         try {
-            const res = await axiosInstance.delete(`/project/delete/${projectId}`)
+            const res = await axiosInstance.delete(
+                `/project/delete/${projectId}`
+            );
 
             toast.success(res.message || "Project deleted successfull");
         } catch (error) {
             console.error("Error deleting project: ", error);
             toast.error("Error deleting project");
         }
-    }
+    },
+
+    getProjectById: async (projectId) => {
+        try {
+            const res = await axiosInstance.get(
+                `/project/getProject/${projectId}`
+            );
+
+            set({ project: res.data.data });
+            toast.success(res.message || "Project found successfully");
+        } catch (error) {
+            console.error("Error fetching project: ", error);
+            toast.error("Error fetching project");
+        }
+    },
 }));

@@ -70,12 +70,14 @@ export const Navbar = () => {
         <nav className="relative w-2xl mx-auto bg-slate-950/90 backdrop-blur-xl mt-2 p-2 px-4 rounded-[999px]">
             <ul className="flex items-center justify-between">
                 <li>
-                    Welcome,{" "}
-                    <span className="bg-linear-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-                        {authUser.data.data.username
-                            ? authUser.data.data.username
-                            : "Champ!"}
-                    </span>
+                    <Link to={"/"}>
+                        Welcome,{" "}
+                        <span className="bg-linear-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+                            {authUser.data.data.username
+                                ? authUser.data.data.username
+                                : "Champ!"}
+                        </span>
+                    </Link>
                 </li>
                 <li className="flex gap-4 items-center justify-center">
                     {/* Projects section */}
