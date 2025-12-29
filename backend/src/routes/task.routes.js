@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createSubTask, createTask, deleteSubTask, deleteTask, getCompletedTasksCount, getTaskById, getTasks, updateSubTask, updateTask } from "../controllers/task.controllers.js";
+import { createSubTask, createTask, deleteSubTask, deleteTask, getCompletedTasksCount, getTaskById, getTasks, getTasksForUser, updateSubTask, updateTask } from "../controllers/task.controllers.js";
 import { isLoggedIn, validateProjectPermission } from "../middlewares/auth.middleware.js";
 import { AvailableUserRoles, UserRolesEnum } from "../utils/constants.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -13,6 +13,10 @@ router
 router
     .route("/getTask/:taskId")
     .get(isLoggedIn, getTaskById);
+
+router
+    .route("/getUserTasks")
+    .get(isLoggedIn, getTasksForUser);
 
 //Added multer middleware
 router

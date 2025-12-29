@@ -39,7 +39,8 @@ export const ListView = () => {
 
     return (
         <>
-            <div className="flex items-center justify-end px-4 pb-2 border-b border-slate-800">
+            <div className="flex items-center justify-between px-4 pb-2 border-b border-slate-800">
+                <p className="text-lg">Total Tasks: <span className="text-emerald-400 font-bold">{tasksByProject?.data?.length}</span></p>
                 <select
                     value={statusSort}
                     onChange={(e) => setStatusSort(e.target.value)}

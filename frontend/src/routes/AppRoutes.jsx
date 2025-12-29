@@ -16,6 +16,7 @@ import { ProfilePage } from "../pages/auth/ProfilePage.jsx";
 import { EditProfilePage } from "../pages/auth/EditProfilePage.jsx";
 import { ProjectDashboard } from "../pages/projects/ProjectsDashboard.jsx";
 import { ProjectPage } from "../pages/projects/ProjectPage.jsx";
+import { TasksPage } from "../pages/tasks/TasksPage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -108,6 +109,11 @@ export default function AppRoutes() {
                 element={
                     authUser ? <ProjectPage /> : <Navigate to={"/login"} />
                 }
+            />
+
+            <Route
+                path="/tasks"
+                element={authUser ? <TasksPage /> : <Navigate to={"/login"} />}
             />
         </Routes>
     );

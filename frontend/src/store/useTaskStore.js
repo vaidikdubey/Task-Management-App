@@ -6,6 +6,7 @@ export const useTaskStore = create((set) => ({
     isGettingCompletedTasks: false,
     tasksByProject: [],
     completedTasksByProject: {},
+    allTasksForUser: {},
 
     getTasksByProject: async (projectId) => {
         try {
@@ -46,6 +47,19 @@ export const useTaskStore = create((set) => ({
         } catch (error) {
             console.error("Error updating task: ", error);
             toast.error("Error updating task");
+        }
+    },
+
+    getAllUserTasks: async () => {
+        try {
+            const res = await axiosInstance.get("/task/getUserTasks");
+
+            set({ allTasksForUser: res.data });
+
+            toast.success(res.message || "User tasks fetched successfully");
+        } catch (error) {
+            console.error("Error fetching user tasks: ", error);
+            toast.error("Error fetching user tasks");
         }
     },
 }));

@@ -165,6 +165,29 @@ const deleteTask = asyncHandler(async (req, res) => {
   }
 });
 
+const getTasksForUser = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  if (!userId) throw new ApiError(400, "User not found");
+
+  try {
+    const userTasks = await Task.find({
+      assignedTo: userId
+    })
+      .populate("project", "name")
+      .populate("assignedBy", "username fullname avatar")
+    
+    console.log(userTasks);
+    
+    return res.status(200)
+      .json(new ApiResponse(200, userTasks, "User tasks fetched successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Error fetching user tasks", [error], error.stack)
+  }
+});
+
+//Subtask controllers
+
 const createSubTask = asyncHandler(async (req, res) => {
   //get task id from req.params
   //get {title, description, isCompleted, createdBy} from req.body
@@ -299,6 +322,7 @@ export {
   deleteTask,
   getTaskById,
   getTasks,
+  getTasksForUser,
   updateSubTask,
   updateTask,
   getCompletedTasksCount
