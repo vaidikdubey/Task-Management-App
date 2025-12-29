@@ -22,7 +22,7 @@ export const ProjectTable = () => {
         : allProjects || [];
 
     return (
-        <div className="bg-slate-900/70 backdrop-blur border-2 border-slate-800 rounded-lg shadow-lg  max-h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar">
+        <div className="bg-slate-900/70 backdrop-blur border-2 border-slate-800 rounded-lg shadow-lg max-h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar">
             <table className="w-full table-fixed border-separate border-spacing-0">
                 <thead>
                     <tr className="text-left text-white font-bold">
