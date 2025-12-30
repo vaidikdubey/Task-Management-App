@@ -1,7 +1,13 @@
 import React from "react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate, Link } from "react-router-dom";
-import { FolderKanbanIcon, StickyNoteIcon, NotepadText, Sidebar } from "lucide-react";
+import {
+    FolderKanbanIcon,
+    StickyNoteIcon,
+    NotepadText,
+    List,
+    NotebookPenIcon,
+} from "lucide-react";
 
 export function SideBar() {
     const navigate = useNavigate();
@@ -29,23 +35,36 @@ export function SideBar() {
             </div>
 
             <div className="flex-1 w-full p-4 space-y-3">
+                <p></p>
                 <Link
-                    to={"/projects"}
-                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-2xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
+                    to={"/createProjects"}
+                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
                 >
-                    <FolderKanbanIcon /> Projects
+                    <FolderKanbanIcon /> New Project
                 </Link>
                 <Link
-                    to={"/tasks"}
-                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-2xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
+                    to={"/createTasks"}
+                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
                 >
-                    <StickyNoteIcon /> Tasks
+                    <StickyNoteIcon /> New Tasks
                 </Link>
                 <Link
-                    to={"/notes"}
-                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-2xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
+                    to={"/createNotes"}
+                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
                 >
-                    <NotepadText /> Notes
+                    <NotebookPenIcon /> New Notes
+                </Link>
+                <Link
+                    to={"/allTasks"}
+                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
+                >
+                    <List /> All Tasks
+                </Link>
+                <Link
+                    to={"/allNotes"}
+                    className="flex items-center justify-start gap-4 font-bold text-emerald-400 text-xl px-5 py-4 hover:bg-emerald-800/20 hover:rounded-2xl"
+                >
+                    <NotepadText /> All Notes
                 </Link>
             </div>
         </div>

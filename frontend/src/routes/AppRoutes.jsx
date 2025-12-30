@@ -14,9 +14,12 @@ import { Layout } from "../layout/Layout.jsx";
 import { useEffect } from "react";
 import { ProfilePage } from "../pages/auth/ProfilePage.jsx";
 import { EditProfilePage } from "../pages/auth/EditProfilePage.jsx";
-import { ProjectDashboard } from "../pages/projects/ProjectsDashboard.jsx";
+import { CreateProjectPage } from "../pages/projects/CreateProjectPage.jsx";
 import { ProjectPage } from "../pages/projects/ProjectPage.jsx";
 import { TasksPage } from "../pages/tasks/TasksPage.jsx";
+import { CreateTaskPage } from "../pages/tasks/CreateTaskPage.jsx";
+import { CreateNotesPage } from "../pages/notes/CreateNotesPage.jsx";
+import { NotesPage } from "../pages/notes/NotesPage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -98,9 +101,13 @@ export default function AppRoutes() {
             />
 
             <Route
-                path="/projects"
+                path="/createProjects"
                 element={
-                    authUser ? <ProjectDashboard /> : <Navigate to={"/login"} />
+                    authUser ? (
+                        <CreateProjectPage />
+                    ) : (
+                        <Navigate to={"/login"} />
+                    )
                 }
             />
 
@@ -112,8 +119,27 @@ export default function AppRoutes() {
             />
 
             <Route
-                path="/tasks"
+                path="/allTasks"
                 element={authUser ? <TasksPage /> : <Navigate to={"/login"} />}
+            />
+
+            <Route
+                path="/createTasks"
+                element={
+                    authUser ? <CreateTaskPage /> : <Navigate to={"/login"} />
+                }
+            />
+
+            <Route
+                path="/createNotes"
+                element={
+                    authUser ? <CreateNotesPage /> : <Navigate to={"/login"} />
+                }
+            />
+
+            <Route
+                path="/allNotes"
+                element={authUser ? <NotesPage /> : <Navigate to={"/login"} />}
             />
         </Routes>
     );

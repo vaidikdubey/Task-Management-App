@@ -11,6 +11,7 @@ export const useProjectStore = create((set, get) => ({
     hasShownAllMemberToast: false,
     hasShownAllProjectToast: false,
     project: {},
+    creatingProject: false,
 
     getAllProjects: async () => {
         set({ isGettingProjects: true });
@@ -89,4 +90,20 @@ export const useProjectStore = create((set, get) => ({
             toast.error("Error fetching project");
         }
     },
+
+    createProject: async (formData) => {
+        set({ creatingProject: true });
+
+        try {
+            const res = await axiosInstance.post("/project/create", formData)
+
+            toast.success(res.message || "Project created successfully")
+        } catch (error) {
+            console.error("Error creating project: ", error);
+            toast.error("Error creating project");
+        }
+        finally {
+            set({ creatingProject: false });
+        }
+    }
 }));
