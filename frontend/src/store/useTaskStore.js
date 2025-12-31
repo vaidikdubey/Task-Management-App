@@ -8,6 +8,8 @@ export const useTaskStore = create((set) => ({
     completedTasksByProject: {},
     allTasksForUser: {},
     creatingTask: false,
+    updatingTask: false,
+    taskById: {},
 
     getTasksByProject: async (projectId) => {
         try {
@@ -17,6 +19,17 @@ export const useTaskStore = create((set) => ({
         } catch (error) {
             console.error("Error fetching tasks: ", error);
             toast.error("Error fetching tasks");
+        }
+    },
+
+    getTaskById: async (taskId) => {
+        try {
+            const res = await axiosInstance.get(`/task/getTask/${taskId}`);
+
+            set({ taskById: res.data.data });
+        } catch (error) {
+            console.error("Error fetching task: ", error);
+            toast.error("Error fetching task");
         }
     },
 
@@ -35,11 +48,13 @@ export const useTaskStore = create((set) => ({
         }
     },
 
-    updateTask: async (projectId, taskId, status) => {
+    updateTask: async (projectId, taskId, updates) => {
+        set({ updatingTask: true });
+
         try {
             const res = await axiosInstance.patch(
                 `/task/${projectId}/update/${taskId}`,
-                { status }
+                updates
             );
 
             toast.success(res.message || "Task updated successfully", {
@@ -48,6 +63,8 @@ export const useTaskStore = create((set) => ({
         } catch (error) {
             console.error("Error updating task: ", error);
             toast.error("Error updating task");
+        } finally {
+            set({ updatingTask: false });
         }
     },
 
@@ -68,15 +85,17 @@ export const useTaskStore = create((set) => ({
         set({ creatingTask: true });
 
         try {
-            const res = await axiosInstance.post(`/task/create/${formData.projectId}`, formData);
+            const res = await axiosInstance.post(
+                `/task/create/${formData.projectId}`,
+                formData
+            );
 
             toast.success(res.message || "Task created successfully");
         } catch (error) {
             console.error("Error creating task: ", error);
             toast.error("Error creating task");
-        }
-        finally {
+        } finally {
             set({ creatingTask: false });
         }
-    }
+    },
 }));

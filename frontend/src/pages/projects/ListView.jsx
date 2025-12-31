@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTaskStore } from "../../store/useTaskStore";
 import { timeAgo } from "../../utils/timeAgo.js";
 
@@ -40,7 +40,12 @@ export const ListView = () => {
     return (
         <>
             <div className="flex items-center justify-between px-4 pb-2 border-b border-slate-800">
-                <p className="text-lg">Total Tasks: <span className="text-emerald-400 font-bold">{tasksByProject?.data?.length}</span></p>
+                <p className="text-lg">
+                    Total Tasks:{" "}
+                    <span className="text-emerald-400 font-bold">
+                        {tasksByProject?.data?.length}
+                    </span>
+                </p>
                 <select
                     value={statusSort}
                     onChange={(e) => setStatusSort(e.target.value)}
@@ -96,7 +101,11 @@ export const ListView = () => {
                                     key={task._id}
                                 >
                                     <td className="px-2 py-3 text-emerald-300 font-semibold cursor-pointer hover:underline hover:text-emerald-500">
-                                        {task?.title}
+                                        <Link
+                                            to={`/${projectId}/editTask/${task._id}`}
+                                        >
+                                            {task?.title}
+                                        </Link>
                                     </td>
                                     <td
                                         className="px-2 py-3 truncate"

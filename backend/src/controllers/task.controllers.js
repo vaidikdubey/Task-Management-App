@@ -50,7 +50,9 @@ const getTaskById = asyncHandler(async (req, res) => {
   }
 
   try {
-    const task = await Task.findById(taskId);
+    const task = await Task.findById(taskId)
+      .populate("assignedTo", "username fullname avatar")
+      .populate("assignedBy", "username fullname avatar");
 
     return res.status(200)
       .json(new ApiResponse(200, task, "Task fetched successfully"));

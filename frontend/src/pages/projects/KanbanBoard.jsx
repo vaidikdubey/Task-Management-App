@@ -55,7 +55,7 @@ export const KanbanBoard = () => {
             }));
 
             //Update backend status
-            updateTask(projectId, activeId, overId);
+            updateTask(projectId, activeId, { status: overId });
 
             return;
         }
@@ -79,7 +79,7 @@ export const KanbanBoard = () => {
             }));
 
             //Update backend status
-            updateTask(projectId, activeId, overTask.status);
+            updateTask(projectId, activeId, { status: overTask.status });
 
             return;
         }
