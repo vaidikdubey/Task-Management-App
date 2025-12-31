@@ -12,6 +12,7 @@ export const useProjectStore = create((set, get) => ({
     hasShownAllProjectToast: false,
     project: {},
     creatingProject: false,
+    editingProject: false,
 
     getAllProjects: async () => {
         set({ isGettingProjects: true });
@@ -104,6 +105,22 @@ export const useProjectStore = create((set, get) => ({
         }
         finally {
             set({ creatingProject: false });
+        }
+    },
+
+    editProject: async (projectId, formData) => {
+        set({ editingProject: true });
+
+        try {
+            const res = await axiosInstance.patch(`/project/update/${projectId}`, formData)
+
+            toast.success(res.message || "Project updated successfully");
+        } catch (error) {
+            console.error("Error updating project: ", error);
+            toast.error("Error updating project");
+        }
+        finally {
+            set({ editingProject: false });
         }
     }
 }));

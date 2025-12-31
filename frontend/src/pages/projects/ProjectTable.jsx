@@ -1,10 +1,12 @@
 import React from "react";
 import { useProjectStore } from "../../store/useProjectStore";
 import { timeAgo } from "../../utils/timeAgo.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Edit, Trash } from "lucide-react";
 
 export const ProjectTable = () => {
+    const navigate = useNavigate();
+
     const {
         selectedProject,
         allProjects,
@@ -89,7 +91,14 @@ export const ProjectTable = () => {
                                     {timeAgo(project?.createdAt)}
                                 </td>
                                 <td className="px-2 py-3 flex gap-2">
-                                    <Edit className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 cursor-pointer" />
+                                    <Edit
+                                        className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 cursor-pointer"
+                                        onClick={() =>
+                                            navigate(
+                                                `/editProject/${project._id}`
+                                            )
+                                        }
+                                    />
                                     <Trash
                                         className="bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 cursor-pointer"
                                         onClick={() =>

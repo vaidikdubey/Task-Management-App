@@ -21,6 +21,7 @@ import { CreateTaskPage } from "../pages/tasks/CreateTaskPage.jsx";
 import { CreateNotesPage } from "../pages/notes/CreateNotesPage.jsx";
 import { NotesPage } from "../pages/notes/NotesPage.jsx";
 import { EditTaskPage } from "../pages/tasks/EditTaskPage.jsx";
+import { EditProjectPage } from "../pages/projects/EditProjectPage.jsx";
 
 export default function AppRoutes() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -147,6 +148,13 @@ export default function AppRoutes() {
                 path="/:projectId/editTask/:taskId"
                 element={
                     authUser ? <EditTaskPage /> : <Navigate to={"/login"} />
+                }
+            />
+
+            <Route
+                path="/editProject/:projectId"
+                element={
+                    authUser ? <EditProjectPage /> : <Navigate to={"/login"} />
                 }
             />
         </Routes>
