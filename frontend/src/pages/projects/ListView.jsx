@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTaskStore } from "../../store/useTaskStore";
 import { timeAgo } from "../../utils/timeAgo.js";
+import { Trash } from "lucide-react";
 
 export const ListView = () => {
     const STATUS_ORDER = {
@@ -12,7 +13,7 @@ export const ListView = () => {
 
     const { projectId } = useParams();
 
-    const { tasksByProject, getTasksByProject } = useTaskStore();
+    const { tasksByProject, getTasksByProject, deleteTask } = useTaskStore();
 
     const [statusSort, setStatusSort] = useState(
         () => localStorage.getItem(`preferredSort:${projectId}`) || "none"
@@ -26,6 +27,10 @@ export const ListView = () => {
             return statusSort === "asc" ? diff : -diff;
         });
     }, [tasksByProject?.data, statusSort]);
+
+    const handleDelete = (taskId) => {
+        deleteTask(projectId, taskId);
+    };
 
     useEffect(() => {
         getTasksByProject(projectId);
@@ -63,7 +68,7 @@ export const ListView = () => {
                             <th className="sticky top-0 z-10 px-2 py-4 bg-slate-900 backdrop-blur-none isolate w-[25%]">
                                 Project Name
                             </th>
-                            <th className="sticky top-0 z-10 px-2 py-4 bg-slate-900 backdrop-blur-none isolate w-[30%]">
+                            <th className="sticky top-0 z-10 px-2 py-4 bg-slate-900 backdrop-blur-none isolate w-[25%]">
                                 Description
                             </th>
                             <th className="sticky top-0 z-10 px-2 py-4 bg-slate-900 backdrop-blur-none isolate w-[15%]">
@@ -77,6 +82,9 @@ export const ListView = () => {
                             </th>
                             <th className="sticky top-0 z-10 px-2 py-4 bg-slate-900 backdrop-blur-none isolate w-[15%]">
                                 Status
+                            </th>
+                            <th className="sticky top-0 z-10 px-2 py-4 bg-slate-900 backdrop-blur-none isolate w-[10%]">
+                                Actions
                             </th>
                         </tr>
                     </thead>
@@ -138,6 +146,14 @@ export const ListView = () => {
                                                 FINISHED
                                             </span>
                                         )}
+                                    </td>
+                                    <td className="px-2 py-3 text-center">
+                                        <Trash
+                                            className="bg-red-500/10 text-red-400 hover:bg-red-500/20 cursor-pointer"
+                                            onClick={() =>
+                                                handleDelete(task._id)
+                                            }
+                                        />
                                     </td>
                                 </tr>
                             ))

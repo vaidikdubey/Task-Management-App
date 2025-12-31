@@ -98,4 +98,17 @@ export const useTaskStore = create((set) => ({
             set({ creatingTask: false });
         }
     },
+
+    deleteTask: async (projectId, taskId) => {
+        try {
+            const res = await axiosInstance.delete(
+                `/task/${projectId}/delete/${taskId}`
+            );
+
+            toast.success(res.message || "Task deleted successfully");
+        } catch (error) {
+            console.error("Error deleting task: ", error);
+            toast.error("Error deleting task");
+        }
+    },
 }));

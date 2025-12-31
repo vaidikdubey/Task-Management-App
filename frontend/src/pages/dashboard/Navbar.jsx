@@ -73,8 +73,8 @@ export const Navbar = () => {
                     <Link to={"/"}>
                         Welcome,{" "}
                         <span className="bg-linear-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-                            {authUser.data.data.username
-                                ? authUser.data.data.username
+                            {authUser?.data?.data?.username
+                                ? authUser?.data?.data?.username
                                 : "Champ!"}
                         </span>
                     </Link>

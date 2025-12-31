@@ -66,7 +66,6 @@ export const EditTaskPage = () => {
                                 onChange={handleChange}
                                 placeholder={taskById?.title}
                                 className="border border-slate-500 px-2 h-10 rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
-                                required
                             />
                         </div>
                         <div className="flex flex-col gap-2 px-2">
@@ -98,7 +97,6 @@ export const EditTaskPage = () => {
                                 value={form.assignedTo}
                                 onChange={handleChange}
                                 className="border border-slate-500 px-2 h-10 rounded-md bg-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 overflow-y-auto no-scrollbar"
-                                required
                             >
                                 <option value="" className="text-slate-300">
                                     {taskById?.assignedTo?.fullname}
@@ -128,7 +126,6 @@ export const EditTaskPage = () => {
                                 value={form.assignedTo}
                                 onChange={handleChange}
                                 className="border border-slate-500 px-2 h-10 rounded-md bg-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 overflow-y-auto no-scrollbar"
-                                required
                             >
                                 <option value="" className="text-slate-300">
                                     {taskById?.assignedBy?.fullname}
@@ -155,7 +152,6 @@ export const EditTaskPage = () => {
                                 value={form.status}
                                 onChange={handleChange}
                                 className="border border-slate-500 px-2 h-10 rounded-md bg-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 overflow-y-auto no-scrollbar"
-                                required
                             >
                                 <option value="" className="text-slate-300">
                                     --{taskById?.status}--
