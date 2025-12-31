@@ -19,6 +19,8 @@ export const ListView = () => {
         () => localStorage.getItem(`preferredSort:${projectId}`) || "none"
     );
 
+    const [taskToDelete, setTaskToDelete] = useState(null);
+
     const sortedTasks = useMemo(() => {
         if (statusSort === "none") return tasksByProject?.data || [];
 
@@ -151,7 +153,7 @@ export const ListView = () => {
                                         <Trash
                                             className="bg-red-500/10 text-red-400 hover:bg-red-500/20 cursor-pointer"
                                             onClick={() =>
-                                                handleDelete(task._id)
+                                                setTaskToDelete(task._id)
                                             }
                                         />
                                     </td>
@@ -161,6 +163,38 @@ export const ListView = () => {
                     </tbody>
                 </table>
             </div>
+
+            {taskToDelete && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-slate-900 rounded-xl p-6 w-[90%] max-w-sm">
+                        <h3 className="text-lg font-semibold text-white mb-2">
+                            Delete Task?
+                        </h3>
+                        <p className="text-sm text-slate-400 mb-4">
+                            This action cannot be undone.
+                        </p>
+
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setTaskToDelete(null)}
+                                className="px-4 py-2 rounded-lg bg-slate-700 text-white cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    handleDelete(taskToDelete);
+                                    setTaskToDelete(null);
+                                }}
+                                className="px-4 py-2 rounded-lg bg-red-600 text-white cursor-pointer"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

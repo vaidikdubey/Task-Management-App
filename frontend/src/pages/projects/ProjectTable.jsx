@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useProjectStore } from "../../store/useProjectStore";
 import { timeAgo } from "../../utils/timeAgo.js";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,6 +6,8 @@ import { Edit, Trash } from "lucide-react";
 
 export const ProjectTable = () => {
     const navigate = useNavigate();
+
+    const [projectToDelete, setProjectToDelete] = useState(null);
 
     const {
         selectedProject,
@@ -102,7 +104,7 @@ export const ProjectTable = () => {
                                     <Trash
                                         className="bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 cursor-pointer"
                                         onClick={() =>
-                                            handleProjectDelete(project._id)
+                                            setProjectToDelete(project._id)
                                         }
                                     />
                                 </td>
@@ -111,6 +113,38 @@ export const ProjectTable = () => {
                     )}
                 </tbody>
             </table>
+
+            {projectToDelete && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-slate-900 rounded-xl p-6 w-[90%] max-w-sm">
+                        <h3 className="text-lg font-semibold text-white mb-2">
+                            Delete Project?
+                        </h3>
+                        <p className="text-sm text-slate-400 mb-4">
+                            This action cannot be undone.
+                        </p>
+
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setProjectToDelete(null)}
+                                className="px-4 py-2 rounded-lg bg-slate-700 text-white cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    handleProjectDelete(projectToDelete);
+                                    projectToDelete(null);
+                                }}
+                                className="px-4 py-2 rounded-lg bg-red-600 text-white cursor-pointer"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
