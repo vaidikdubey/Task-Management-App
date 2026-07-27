@@ -19,4 +19,4 @@ A full-stack task management application to create, manage and track tasks effic
 - Validation: Express-validator
 - Mailing: Nodemailer, Mailgen, MailTrap
 - Frontend: React + Vite, React-Router-DOM
-- Styling: Tailwind CSS, lucid-react (icons)
+- Styling: Tailwind CSS, lucid-react
